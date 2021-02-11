@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+<!-- Caveat: maximum number of pokemon in a given type bucket is currently hard-coded-->
+<html lang="en">
+<title>PokeTyped</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="description" content="View all Pokemon by type">
+<meta name="author" content="Dr. Zachary Bullard">
+<style>
+    body {
+        font-family: "Lato", sans-serif
+    }
+
+    div.tooltip_hover {
+        position: absolute;
+        text-align: left;
+        padding: 5px;
+        font: 18px sans-serif;
+        font-family: "Lato";
+        background: white;
+        border: solid;
+        border-width: 2;
+        border-radius: 5px;
+        pointer-events: all;
+    }
+
+    div.tooltip_bottom {
+        position: absolute;
+        text-align: center;
+        padding: 2px;
+        font: 18px sans-serif;
+        font-family: "Lato";
+        background: lightsteelblue;
+        border: 2px solid black;
+        border-radius: 40px;
+        pointer-events: all;
+    }
+
+    th {
+        text-align: center;
+        font-weight: bold;
+        font-family: "Lato";
+    }
+
+    td {
+        text-align: right;
+        font-weight: font-weight;
+        font-family: "Lato";
+        padding-right: 35px;
+    }
+
+    table {
+        position: absolute;
+        text-align: left;
+        //width: 400px;
+        //height: 28px;
+        //width: 100%;
+        //min-width: 400px;
+        padding: 2px;
+        font: 18px sans-serif;
+        font-family: "Lato";
+        background: white;
+        border: 2px solid black;
+        border-radius: 40px;
+        pointer-events: all;
+    }
+
+    .chart_labels {
+        font-family: "Lato";
+        font: 15px sans-serif;
+    }
+
+    .legend_labels {
+        font-family: "Lato";
+        font: 20px sans-serif;
+    }
+
+    .line__figure {
+        float: left;
+        font-family: "Lato";
+        margin-right: -20px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .line__figcaption {
+        font-family: "Lato";
+        position: relative;
+        top: -15px;
+    }
+
+    .line__figure_type {
+        font-family: "Lato";
+        float: left;
+        // margin-left: -5px;
+        margin-right: -10px;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        padding: 10px;
+    }
+
+    .line__figcaption_type {
+        font-family: "Lato";
+        position: relative;
+        top: 10px;
+    }
+
+</style>
+
+<head>
+
+</head>
+
+<body>
+
+
+        <div class="w3-bar w3-black w3-card">
+            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+            <a href="index.html" class="w3-bar-item w3-button w3-padding-large">POKETYPED</a>
+            <a href="about.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT</a>
+            <!--
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="#" class="w3-bar-item w3-button">Merchandise</a>
+                    <a href="#" class="w3-bar-item w3-button">Extras</a>
+                    <a href="#" class="w3-bar-item w3-button">Media</a>
+
+                            <button onclick="update(data1)">Variable 1</button>
+            <button onclick="update(data2)">Variable 2</button>
+
+                </div>
+            </div>
+                 -->
+        </div>
+
+        <body>
+            <!-- Load d3.js -->
+            <!--<script src="https://d3js.org/d3.v4.min.js"></script> -->
+            <script src="d3/d3.min.js"></script>
+
+            <!-- Create a div where the graph will take place -->
+            <div id="poke_graph"> </div>
+
+            <table id="effectiveness_table">
+                <tr>
+                    <th id="effectiveness_header" colspan="6">Effectiveness and Damage Multipliers of Attacks Against Pokemon</th>
+                </tr>
+                <tr>
+                    <th><image src="icons_other/immune.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/resistantx2.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/resistant.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/effective.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/super_effective.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/super_effectivex2.png" height=150 width=150></image></th>
+                </tr>
+                <tr>
+                    <th>Immune</th>
+                    <th>2x Resistant</th>
+                    <th>Resistant</th>
+                    <th>Effective</th>
+                    <th>Super Effective</th>
+                    <th>2x Super Effective</th>
+                </tr>
+                <tr>
+                    <th>x0</th>
+                    <th>x0.25</th>
+                    <th>x0.5</th>
+                    <th>x1</th>
+                    <th>x2</th>
+                    <th>x4</th>
+                </tr>
+
+            </table>
+
+            <script>
+
+                var max_number_pokemon = 75
+
+                //Data dictionary for type icons
+                var icons_type = function (type, slash) {
+                    return "icons_type" + slash + "GO_" + type + ".png";
+                };
+
+                var scale_color1 = 'black',
+                    scale_color2 = 'rgb(41, 41, 41)',
+                    scale_color3 = 'rgb(0, 132, 255)';
+
+                // Build color scale
+                var myColor = d3.scaleSequential()
+                    .interpolator(d3.scaleLog().domain([0, 1, max_number_pokemon]).range([scale_color1, scale_color2, scale_color3]))
+                    .domain([0, 1, max_number_pokemon])
+
+                // set the dimensions and margins of the graph
+                var margin = {
+                    top: 100, right: 600, bottom: 20, left: 100
+                },
+                    width = 1300 - margin.left - margin.right,
+                    height = 720 - margin.top - margin.bottom,
+                    icon_side = 30,
+                    icon_buffer = 3;
+
+                // append the svg object to the body of the page
+                var svg = d3.select("#poke_graph")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                //Effectiveness table
+                var table = d3.select("#effectiveness_table")
+                    , tbody = table.append("tbody")
+
+                //Read the data
+                //d3.csv("https://raw.githubusercontent.com/zacbullard/PokeTyped/main/type_stacked.csv").then(function(data) { //v6 way
+                //d3.csv("https://raw.githubusercontent.com/zacbullard/PokeTyped/main/type_stacked.csv", function (error,data) {
+                var data = d3.csv("type_stacked.csv", function (error, data) {
+                    // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
+                    var type1_stacked = d3.map(data, function (d) { return d['Type 1']; }).keys()
+                    var type2_stacked = d3.map(data, function (d) { return d['Type 2']; }).keys()
+
+                    // Build X scales and axis:
+                    var xAxis = d3.scaleBand()
+                        .range([width, 0])
+                        .domain(type2_stacked)
+                        .padding(0.05);
+
+                    svg.append("g")
+                        .attr('id', 'heat-map')
+                        //.style("font-size", 15)
+                        .attr("transform", "translate(0, " + 0 + ")")
+                        .call(d3.axisBottom(xAxis).tickSize(0))
+                        .selectAll(".tick").each(function (d, i) {
+                            d3.select(this)
+                                .append('image')
+                                .attr('xlink:href', icons_type(type2_stacked[i], "/"))
+                                .attr('x', -icon_side / 2)
+                                .attr('y', -icon_side - icon_buffer)
+                                .attr('width', icon_side)
+                                .attr('height', icon_side)
+                        }).selectAll("text")
+                        .attr("y", -icon_buffer * 2)
+                        .attr("x", icon_side + icon_buffer * 2)
+                        .attr("transform", "rotate(270)")
+                        .style("text-anchor", "start")
+                        .attr("class", "chart_labels")
+
+                    // Build Y scales and axis:
+                    var yAxis = d3.scaleBand()
+                        .range([0, height])
+                        .domain(type1_stacked)
+                        .padding(0.05);
+
+                    svg.append("g")
+                        //.style("font-size", 15)
+                        .call(d3.axisLeft(yAxis).tickSize(0))
+                        .selectAll(".tick").each(function (d, i) {
+                            d3.select(this)
+                                .append('image')
+                                .attr('xlink:href', icons_type(type1_stacked[i], "/"))
+                                .attr('x', -icon_side - icon_buffer)
+                                .attr('y', -icon_side / 2)
+                                .attr('width', icon_side)
+                                .attr('height', icon_side)
+                        }).selectAll("text")
+                        .attr("y", 0)
+                        .attr("x", -icon_side - icon_buffer * 2)
+                        .attr("class", "chart_labels")
+
+                    // create a tooltips
+                    var tooltip_hover = d3.select("body")
+                        .append("div")
+                        .style("opacity", 0)
+                        .attr("class", "tooltip_hover")
+
+                    var tooltip_bottom = d3.select("#effectiveness_table")
+                        .append("div")
+                        .style("opacity", 0)
+                        .attr("class", "tooltip_bottom")
+
+                    //start with default types selected
+                    var current_type1 = 'Na'
+                    var current_type2 = 'Na'
+
+                    // Three functions that change the tooltip_hover when user hover / move / leave a cell
+                    var mouseover = function (d) {
+                        //Fade in tooltip_hover
+                        tooltip_hover
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 1)
+                        //Add border to square
+                        d3.select(this)
+                            .style("stroke", "black")
+                            .style("opacity", 1)
+                    }
+                    var mousemove = function (d) {
+                        //Choose text and location of tooltip_hover
+                        tooltip_hover.html(function () {
+                            if (d['Type 1'] == d['Type 2']) {
+                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                    + " Pokemon type count: <br> " + d.Count;
+                            } else {
+                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                    + ' and ' + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                    + " Pokemon type count: <br> " + d.Count;
+                            }
+                        })
+                            .style("left", (d3.event.pageX + 30) + "px") //Box to follow mouse
+                            .style("top", (d3.event.pageY - 30) + "px") //Box to follow mouse
+                        //.style("left", width * 3 / 7 + "px") //Box to remain in static location
+                        //.style("top", height * 2 / 9 + "px") //Box to remain in static location
+                    }
+                    var mouseleave = function (d) {
+                        //Fade out tooltip_hover
+                        tooltip_hover
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 0)
+                        //Remove border on square
+                        d3.select(this)
+                            .style("stroke", "none")
+                            .style("opacity", 1.0)
+                    }
+
+                    var mouseclick = function (d) {
+
+                        //Populate effectiveness table if it's empty or the types have changed
+                        if ((tbody.selectAll('tr').size() == 0) || ((current_type1 != d['Type 1']) || (current_type2 != d['Type 2']))) {
+
+                            current_type1 = d['Type 1']
+                            current_type2 = d['Type 2']
+
+                            //Remove old effectivenesses from table body
+                            tbody.selectAll('tr')
+                                //.transition()
+                                //.duration(800)
+                                //.style("opacity", 0)
+                                .remove()
+
+
+                            d3.select("#effectiveness_header").style("opacity", 0)
+                            //Update header with type info
+                            d3.select("#effectiveness_header").html(function () {
+                                if (d['Type 1'] == d['Type 2']) {
+                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of type: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>';
+                                } else {
+                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of types: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                        + " and " + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>';
+                                }
+                            })
+                            d3.select("#effectiveness_header")
+                                //.transition()
+                                //.duration(800)
+                                .style("opacity", 1)
+
+                            var effectiveness_names = ['Immune', '2x Resistant', 'Resistant', 'Effective', 'Super Effective', '2x Super Effective']
+
+                            //Create data for effectiveness table
+                            var data_effectiveness = [];
+                            for (var i = 0; i < effectiveness_names.length; i++) {
+                                data_effectiveness.push(d3.tsvParseRows(d[effectiveness_names[i]])[0]);
+                            }
+
+                            //Transpose array
+                            data_effectiveness = data_effectiveness[0].map((_, colIndex) => data_effectiveness.map(row => row[colIndex]));
+
+                            // create a row for each object in the data
+                            var rows = tbody.selectAll("tr")
+                                .data(data_effectiveness)
+                                .enter()
+                                .append("tr");
+
+                            //Fill in rows with data
+                            data_effectiveness.forEach(function (d) {
+                                var tr = tbody.append("tr")
+                                d.forEach(function (val, index) {
+                                    tr.append("td").style("opacity", 0)
+                                        .html(function () {
+                                            if (val == '') {
+                                                return val
+                                            } else {
+                                                return val + ' <image src="' + icons_type(val, '\\') + '" id="type_icon" width="' + icon_side + '" height="' + icon_side + '"></image>'
+                                            }
+                                        });
+                                });
+                            });
+
+                            tbody.selectAll('td')
+                                //.transition().duration(800)
+                                .style("opacity", 1)
+
+                            //tooltip_bottom.html("<button id='but1'>Button 1</button><button  id='but2'>Button 2</button>")
+                            var pokemon_names = d3.tsvParseRows(d['name'])[0];
+                            var pokemon_images = d3.tsvParseRows(d['image'])[0];
+
+                            //See if any pokemon of the given type composition actually exist
+                            if (typeof (pokemon_names) !== "undefined") {
+                                tooltip_bottom.style("font-size", "18px")
+                                //Choose text and location of tooltip_bottom
+                                tooltip_bottom
+                                    //.transition().duration(200)
+                                    .style("opacity", 1)
+
+                                var pokemon_list = ''
+                                tooltip_bottom.html(function () {
+                                    if (d['Type 1'] == d['Type 2']) {
+                                        //pokemon_list = d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" align="left" id="type_icon" ></image>:'
+                                        pokemon_list = '<figure class="line__figure_type"><img src="' + icons_type(d['Type 1'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 1'] + ' </b></figcaption></figure>'
+                                    } else {
+                                        //pokemon_list = ' <image class="line__type" src="' + icons_type(d['Type 1'], '\\') + '" align="left" id="type_icon" ></image>'
+                                        //  + ' <image class="line__figure" src="' + icons_type(d['Type 2'], '\\') + '" align="left" id="type_icon" ></image>'
+                                        pokemon_list = '<figure class="line__figure_type"><img src="' + icons_type(d['Type 1'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 1'] + ' </b></figcaption></figure>'
+                                            + '<figure class="line__figure_type"><img src="' + icons_type(d['Type 2'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 2'] + ' </b></figcaption></figure>'
+                                    }
+
+                                    for (var i = 0; i < pokemon_names.length; i++) {
+                                        pokemon_list = pokemon_list + '<figure class="line__figure"><img src="icons_pokemon/' + pokemon_images[i] + '" id="pokemon_fig" /><figcaption class="line__figurecaption figurecaption"> ' + pokemon_names[i] + ' </figcaption></figure>'
+                                    }
+
+                                    return pokemon_list;
+                                })
+                                    .style("left", 0 + "px") //Box to remain in static location
+                                    .style("top", d3.select('#effectiveness_table').node().getBoundingClientRect().height + "px") //Box to remain in static location
+                                    .style("width", d3.select('#effectiveness_table').node().getBoundingClientRect().width + "px") //Box to remain in static location
+                            } else {
+
+                                tooltip_bottom
+                                    //.transition().duration(200)
+                                    .style("opacity", 1)
+                                tooltip_bottom.style("font-size", "34px")
+                                tooltip_bottom.html(function () {
+                                    return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" ></image>'
+                                        + " and " + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon" ></image> Pokemon don\'t exist!';
+                                })
+                                    .style("left", 8 + "px") //Box to remain in static location
+                                    .style("top", d3.select('#effectiveness_table').node().getBoundingClientRect().height + "px") //Box to remain in static location
+                                    .style("width", d3.select('#effectiveness_table').node().getBoundingClientRect().width - 16 + "px") //Box to remain in static location
+                            }
+
+                        } else {
+                            //Collapse the tooltip if you click on the square again.
+                            tooltip_bottom
+                                //.transition().duration(200)
+                                .style("opacity", 0)
+
+                            tbody.selectAll('tr')
+                                //.transition().duration(800)
+                                //.style("opacity", 0)
+                                .remove()
+
+                            d3.select("#effectiveness_header").style("opacity", 0)
+                            //Update header with type info
+                            d3.select("#effectiveness_header").html(function () {
+                                return "Effectiveness and Damage Multipliers of Attacks Against Pokemon"
+                            })
+                            d3.select("#effectiveness_header")
+                                //.transition().duration(800)
+                                .style("opacity", 1)
+                        }
+                    }
+
+                    // add the squares
+                    svg.selectAll()
+                        .data(data, function (d) { return d['Type 2'] + ':' + d['Type 1']; })
+                        .enter()
+                        .append("rect")
+                        .attr("x", function (d) { return xAxis(d['Type 1']) })
+                        .attr("y", function (d) { return yAxis(d['Type 2']) })
+                        .attr("rx", 4)
+                        .attr("ry", 4)
+                        .attr("width", xAxis.bandwidth())
+                        .attr("height", yAxis.bandwidth())
+                        .style("fill", function (d) { return myColor(d.Count) })
+                        .style("stroke-width", 4)
+                        .style("stroke", "none")
+                        .style("opacity", 1.0)
+                        .on("mouseover", mouseover)
+                        .on("mousemove", mousemove)
+                        .on("mouseleave", mouseleave)
+                        .on("click", mouseclick)
+                })
+
+                //LEGEND
+                g = svg.append("g")
+                    .attr("transform", "translate(" + (width + margin.left - icon_side) + "," + (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) + ")")
+                    .style("font", "14px Lato")
+                var num_rectangles_domain1 = 39
+                var num_rectangles_domain2 = 80
+                var width_rectangles = 5
+                var height_rectangles = 50
+                //Fancy shmancy way to convert any real number between x0 and x1 to any logged number between y0 and y1 while keeping log scaling betwix
+                var x0 = 0
+                var x1 = 1
+                var y0 = 1
+                var y1 = max_number_pokemon
+                function convert_to_log(x, x0, x1, y0, y1) {
+                    return Math.exp((x - x0) / (x1 - x0) * (Math.log(y1) - Math.log(y0)) + Math.log(y0))
+                }
+                //Border
+                g.append("rect")
+                    .attr("y", function (d) { return 0 - (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) })
+                    .attr("x", function (d) { return -height_rectangles })
+                    .attr("width", function (d) { return height_rectangles })
+                    .attr("height", function (d) { return width_rectangles * (num_rectangles_domain1 + num_rectangles_domain2) })
+                    .style("stroke", "grey")
+                    .style("fill", "none")
+                    .style("stroke-width", "8px")
+                    .attr("rx", 3)
+                    .attr("ry", 3);
+                //Build the scale data
+                var rect_data1 = d3.range(num_rectangles_domain1 + 1).map(function (d) { return [num_rectangles_domain1 + num_rectangles_domain2 - d, d / num_rectangles_domain1] })
+                var rect_data2 = d3.range(1, num_rectangles_domain2 + 1).map(function (d) { return [num_rectangles_domain2 - d, convert_to_log(d / num_rectangles_domain2, x0, x1, y0, y1)] })
+                var rect_data = rect_data1.concat(rect_data2)
+                g.selectAll("rect").data(rect_data).enter()
+                    .append("rect")
+                    .attr("y", function (d) { return d[0] * width_rectangles - (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) })
+                    .attr("x", function (d) { return -height_rectangles })
+                    .attr("width", function (d) { return height_rectangles })
+                    .attr("height", function (d) { return width_rectangles })
+                    .attr("fill", function (d) {
+                        return (myColor(d[1]))
+                    })
+                //Make ticks
+                var domain = [0.1, 1, 75]
+                var range = [0, 200].reverse()
+                var logScale = d3.scaleLog().domain(domain).range(range)
+                var axis = d3.axisRight(logScale).tickFormat(function (e) {
+                    if (Math.floor(e) != e) {
+                        return 0;
+                    }
+                    return e;
+                }).tickSize(15);
+                g.call(axis)
+                //Make Axis label
+                g.append("text")
+                    .attr("fill", "black")
+                    .attr("x", -height_rectangles * 1.1)
+                    .attr("y", -(margin.top * 3.5 + icon_side * 2 + icon_buffer * 2))
+                    .attr("dy", ".3em")
+                    .text("Count")
+                    .classed("legend_labels", true);
+
+            </script>
+
+
+
+        </body>
+
+</body>
+
+</html>

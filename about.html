@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<!-- Caveat: maximum number of pokemon in a given type bucket is currently hard-coded-->
+<html lang="en">
+<title>PokeTyped</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<meta name="description" content="View all Pokemon by type">
+<meta name="author" content="Dr. Zachary Bullard">
+<style>
+    body {
+        font-family: "Lato", sans-serif
+    }
+    .w3-ul {
+        text-align: left;
+    }
+</style>
+
+<head>
+
+</head>
+
+<body>
+
+    <div class="w3-bar w3-black w3-card">
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <a href="index.html" class="w3-bar-item w3-button w3-padding-large">POKETYPED</a>
+        <a href="about.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT</a>
+        <!--
+        <div class="w3-dropdown-hover w3-hide-small">
+            <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="#" class="w3-bar-item w3-button">Merchandise</a>
+                <a href="#" class="w3-bar-item w3-button">Extras</a>
+                <a href="#" class="w3-bar-item w3-button">Media</a>
+
+                        <button onclick="update(data1)">Variable 1</button>
+        <button onclick="update(data2)">Variable 2</button>
+
+            </div>
+        </div>
+             -->
+    </div>
+
+    <div class="w3-container w3-auto w3-center w3-padding-16">
+        <h2>Credits</h2>
+        <p class="w3-opacity"><i>Tools Used</i></p>
+        <ul class="w3-ul">
+            <li>
+                <a href="https://pokeapi.co/"><img src="icons_other/pokeapi_256.png" title="https://pokeapi.co/" style="width:100px"></a>
+                : The underlying pokemon data (up to the most recent generation, Sword and Shield) for species, images, and typing come from the pokeapi.co RESTful API.
+                It's a really great repository for all things Pokemon, be sure to check them out or even contribute.
+                Note that PokeTyped actually doesn't make any active calls to the API, I made a one-time scrape for the relevant data which has been summarized and cached here.
+            </li>
+            <li>
+                <a href="https://www.python.org/"><img src="icons_other/python_logo.png" title="https://www.python.org/" style="width:100px"></a>
+                : Data wrangling and analysis done via Pandas. Special shout-out to my favorite Python IDE ever, <a href="https://www.spyder-ide.org/">Spyder:</a><a href="https://www.spyder-ide.org/"><img src="icons_other/spyder_logo.png" title="https://www.spyder-ide.org/" style="width:50px"></a> 
+            </li>
+            <li>
+                <a href="https://d3js.org/"><img src="icons_other/d3js.png" title="https://d3js.org/" style="width:50px"></a>
+                : Visualizations built from the Data-Driven Documents JavaScript library.
+            </li>
+            <li>
+                <a href="https://github.com/"><img src="icons_other/github_logo.png" title="https://github.com/" style="width:100px"></a>
+                : Feel free to check out <a href="https://github.com/zacbullard/PokeTyped">my repo</a> if you want to try the code for yourself.
+            </li>
+        </ul>
+        <h2>Methods</h2>
+        <p class="w3-opacity"><i>Only Combinations, No Permutations</i></p>
+        <p class="w3-justify">
+            There are 18 pokemon types, for 171 possible combinations when taken two at a time. 
+            Doubling up on the same type is taken as mono typing, <i>e.g.</i> fire <img src="icons_type/GO_Fire.png" style="width:25px"> + fire <img src="icons_type/GO_Fire.png" style="width:25px"> is simply fire <img src="icons_type/GO_Fire.png" style="width:25px">.
+            While pokemon with dual types have them in a set order, for PokeTyped, ordering of the types is not considered. 
+            This ordering of the types is irrelevant mechanically (except in some minor edge cases).
+        </p>
+        <p class="w3-opacity"><i>Varieties vs. Forms</i></p>
+        <p class="w3-justify">
+            While every pokemon has a given pokedex number, it may come in a bewildering number of variants.
+            The PokeAPI makes a distinction between <b>"varieties"</b> and <b>"forms"</b>.
+            Varieties are different enough to be considered a distinct entity. 
+            Forms mostly only differ in aesthetics.
+            PokeTyped only reports varieties, and not forms.
+        </p>
+        <p class="w3-justify">
+            For instance, pokemon number 6 is fan-favorite Charizard <img src="icons_pokemon/charizard.png" title="Charizard" style="width:50px">. 
+            However, he also has two mega evolutions <img src="icons_pokemon/charizard-mega-x.png" title="Mega Charizard X" style="width:50px"><img src="icons_pokemon/charizard-mega-y.png" title="Mega Charizard Y" style="width:50px"> as well a gigantamax incarnation <img src="icons_pokemon/charizard-gmax.png" title="Gigantamax Charizard" style="width:50px">. 
+            These are all distinct enough in terms of modifying the base stats and abilities of Charizard, that they are considered "varieties" of the base species.
+            For instance, while Charizard <img src="icons_pokemon/charizard.png" title="Charizard" style="width:50px"> normally has the <img src="icons_type/GO_Fire.png" style="width:25px"> fire and <img src="icons_type/GO_Flying.png" style="width:25px"> flying types, Mega Charizard X <img src="icons_pokemon/charizard-mega-x.png" title="Mega Charizard X" style="width:50px"> is fire <img src="icons_type/GO_Fire.png" style="width:25px"> and dragon <img src="icons_type/GO_Dragon.png" style="width:25px">.
+            Thus, each of them has a distinct entry in PokeTyped. 
+        </p>
+        <p class="w3-justify">
+            This is contrast with Unown, which has a form for every letter in the alphabet (as well as exclamation and question marks). 
+            Here are Unown A and B: <img src="icons_pokemon/unown.png" title="Unown A" style="width:50px"><img src="icons_other/201-b.png" title="Unown B" style="width:50px"> 
+            Besides this aesthetic difference, all Unown have are the same psychic type with the same stats, and are indistinguishable in battle.
+            Thus, Unown has only one entry in PokeTyped, and not twenty-eight of them.
+        </p>
+        <p class="w3-opacity"><i>Further Exclusions</i></p>
+        <p class="w3-justify">
+            <i>Totem</i> pokemon are not considered, as players can't even catch them to begin with.
+            I may in future iterations of PokeTyped add the ability to further filter out non-standard forms such as mega evolutions, as they aren't even usable in the latest generation of games (although still useable in Pokemon GO).            
+        </p>
+        <p class="w3-opacity"><i>Scaling</i></p>
+        <p class="w3-justify">
+            Bad scaling was a common issue I had with other heat maps trying to depict the typing distribution of pokemon when I did my initial research.
+            There are so many Water and Normal pokemon, that these spikes in the data wash out the contrast with all bins outside the diagonal.
+            This also conflicts with one of the main messages and fun with this graph, which is discovering which type combinations don't exist, or only have a single rare representative.
+        </p>   
+        <p class="w3-justify">         
+            So, I chose a log scale for several nice properties.
+            <ul class="w3-ul">
+                <li>
+                    1: log(0) is undefined, so I can paint all <b>unused</b> type combinations in stark black.
+                </li>
+                <li>
+                    2: log(1) is zero, so I can paint all type combinations of pokemon <b>unique type</b> in pure grey.
+                </li>
+                <li>
+                    3: log() brings down large outliers, letting you see more contrast in the lower count ranges.
+                </li>
+            </ul>
+        </p>
+        <p class="w3-justify">  
+            The scale bar is kind of unusual due to these properties, especially the black bottom part ticked with several zeros. 
+            But I hope it's not too off-putting for people, and they catch on with the meaning in the color scheme.
+        </p>
+        <h2>Why PokeTyped?</h2>
+        <p class="w3-opacity"><i>For Love</i></p>
+        <p class="w3-justify">
+            My son is very much into Pokemon, and always asking me questions like "What's a fire <img src="icons_type/GO_Fire.png" style="width:25px"> and grass <img src="icons_type/GO_Grass.png" style="width:25px"> pokemon?" "What're all the dragon <img src="icons_type/GO_Dragon.png" style="width:25px"> and rock <img src="icons_type/GO_Rock.png" style="width:25px"> pokemon?" etc. etc. (the answers are "<i>They don't exist!</i>" and "Tyrunt <img src="icons_pokemon/tyrunt.png" title="Tyrunt" style="width:50px"> and Tyrantrum <img src="icons_pokemon/tyrantrum.png" title="Tyrantrum" style="width:50px">" respectively).
+            I should have seen this coming since I introduced him to Pokemon, and who am I kidding, I love Pokemon too.
+            But I couldn't find any website online that could provide answers to such questions up to my standards, with the additional constraint that my son is too young to read and type.
+            So I created PokeTyped to answer his questions, and also satisfy my own personal curiosity regarding the type distributions and effectivenesses.
+        </p>
+        <p class="w3-opacity"><i>For Imagination</i></p>
+        <p class="w3-justify">
+            The rock-paper-scissors typing system is fun to think about, and it's also kind of like taking the classical Greek elements of air <img src="icons_type/GO_Flying.png" style="width:25px">, earth <img src="icons_type/GO_Ground.png" style="width:25px">, fire <img src="icons_type/GO_Fire.png" style="width:25px">, and water <img src="icons_type/GO_Water.png" style="width:25px">, but scaling it up to 18 elements.
+            It's pure fuel for the imagination, trying to envision what an "electric and bug" monster would look like and how it would behave.
+            Surprisingly, despite the release of over 800+ Pokemon, many of the 171 type combinations remain barren.
+        </p>
+        <p class="w3-opacity"><i>For Strategy</i></p>
+        <p class="w3-justify">
+            In addition to listing which pokemon compose the various type combinations, I wanted PokeTyped to let you explore various tactical options for the combat system as well, via the resistance <img src="icons_other/resistant.png" style="width:25px"> table. Clicking around is a lot more fluid than selecting two drop-down options for types like I found in other sites.
+        </p>
+        <p class="w3-justify">
+            It can get difficult to keep track of all the type interactions, some of which are asymmetrical.
+            For example electric <img src="icons_type/GO_Electric.png" style="width:25px"> attacks are super effective <img src="icons_other/super_effective.png" style="width:25px"> against water <img src="icons_type/GO_Water.png" style="width:25px"> pokemon, but electric <img src="icons_type/GO_Electric.png" style="width:25px"> pokemon take the usual x1 damage <img src="icons_other/effective.png" style="width:25px"> from water <img src="icons_type/GO_Water.png" style="width:25px"> attacks.
+            This is harder to remember than a symmetrical relationship, like fire <img src="icons_type/GO_Fire.png" style="width:25px"> attacks being super effective <img src="icons_other/super_effective.png" style="width:25px"> against grass <img src="icons_type/GO_Grass.png" style="width:25px"> pokemon, and grass <img src="icons_type/GO_Grass.png" style="width:25px"> attacks being not very effective <img src="icons_other/resistant.png" style="width:25px"> to fire <img src="icons_type/GO_Fire.png" style="width:25px"> pokemon.
+            <i>I.e.</i> fire <img src="icons_type/GO_Fire.png" style="width:25px"> is the better match up against grass <img src="icons_type/GO_Grass.png" style="width:25px"> every time, not just on attack, but also defense).
+            These issues are compounded when you have dual-typed pokemon, which have the effectivenesses multiplied together.
+        </p>
+        <p class="w3-justify">
+            PokeTyped does all these calculations for you, even for the niches that are currently unfulfilled due to missing type combinations.
+        </p>
+        <p class="w3-justify">
+            With the advent of the player vs. player combat in Pokemon GO (by many measures the most popular and played Pokemon game ever), type effectiveness knowledge is a must, as you have to know how to cover the weaknesses between your team's pokemon before you battle, and also play into your strengths on against your opponent's team dynamically.
+            The mainline pokemon games are not known for their difficulty, but it still pays dividends to have a type effectiveness reference, as the effectiveness multipliers are much stronger than in Pokemon GO (hello complete damage immunity <img src="icons_other/immune.png" style="width:25px">!).
+        </p>
+        <p class="w3-justify">
+            For PokeTyped, I only list the resistances and super effectiveness of incoming attacks against the Pokemon of the given type, and don't bother with which types the Pokemon can potentially do super effective damage against.
+            This is because:
+            <ul class="w3-ul">
+                <li>
+                    1: Pokemon can learn moves outside of their own type, and super effectiveness has a greater effect than STAB (Same Type Attack Bonus)
+                </li>
+                <li>
+                    2: With 171 potential combinations, listing them all would just be information overload
+                </li>
+                <li>
+                    3: Listing offensive effectivenesses is redundant, since it will be listed in the defensive effectiveness for the defending pokemon
+                </li>
+                <li>
+                    4: I wanted to keep the focus on the particular type combination and their pokemon, and not dilute it with potential match ups
+                </li>
+            </ul>
+        </p>
+
+        <p class="w3-opacity"><i>Closing Remarks</i></p>
+        <p class="w3-justify">
+            As a kid, after I caught all 150 'mons in the original Pokemon Red, I felt immense satisfaction.
+            Even if your reward is just a certificate in-game (not even a real piece of paper, just a digital one!).
+            When generation II came out, I thought "Forget it, I'm not doing all that over again!"
+            And thus my interest faded, until decades later, with the introduction of Pokemon GO.
+            My son gained interest watching me, and I picked up Pokemon Sword for us to play together, marking 23 years in between playing mainline games.
+            I think that stands as a testament to the innate allure that beasts of the imagination has on the human psyche, and the ability of the Pokemon franchise to capture that feeling.
+            I hope you find this website entertaining, whether it be through the fluff of imagination, or the crunch of the rules and mechanics.
+        </p>
+        <p class="w3-justify">
+            ~Dr. Zachary Bullard
+        </p>
+</body>
+
+</html>
