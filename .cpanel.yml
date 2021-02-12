@@ -1,0 +1,12 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/user/public_html/
+    - /bin/cp index.html $DEPLOYPATH
+    - /bin/cp about.html $DEPLOYPATH
+    - /bin/cp -R cache $DEPLOYPATH
+    - /bin/cp -R CSS $DEPLOYPATH
+    - /bin/cp -R d3 $DEPLOYPATH
+    - /bin/cp -R icons_other $DEPLOYPATH
+    - /bin/cp -R icons_pokemon $DEPLOYPATH
+    - /bin/cp -R icons_type $DEPLOYPATH
