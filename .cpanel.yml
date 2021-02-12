@@ -10,3 +10,4 @@ deployment:
     - /bin/cp -R icons_other $DEPLOYPATH
     - /bin/cp -R icons_pokemon $DEPLOYPATH
     - /bin/cp -R icons_type $DEPLOYPATH
+    - /bin/cp type_stacked $DEPLOYPATH
