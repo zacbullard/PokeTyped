@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/user/public_html/
+    - export DEPLOYPATH=/home/pokehevo/public_html/
     - /bin/cp index.html $DEPLOYPATH
     - /bin/cp about.html $DEPLOYPATH
     - /bin/cp -R cache $DEPLOYPATH
