@@ -99,6 +99,7 @@
         top: 10px;
     }
 
+
 </style>
 
 <head>
@@ -106,28 +107,26 @@
 </head>
 
 <body>
+    <div class="w3-bar w3-black w3-card">
+        <a href="index.html" class="w3-bar-item w3-button w3-padding-large">POKETYPED</a>
+        <a href="about.html" class="w3-bar-item w3-button w3-padding-large">ABOUT</a>
+        <a class="w3-bar-item w3-right w3-padding-large w3-opacity">Click any square for Pokemon! v1.0</a>
+        <!--
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <div class="w3-dropdown-hover w3-hide-small">
+            <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="#" class="w3-bar-item w3-button">Merchandise</a>
+                <a href="#" class="w3-bar-item w3-button">Extras</a>
+                <a href="#" class="w3-bar-item w3-button">Media</a>
 
-        <div class="w3-black">
-            <a href="index.html" class=" w3-button w3-padding-large">POKETYPED</a>
-            <a href="about.html" class=" w3-button w3-padding-large">ABOUT</a>
-            <a class="w3-right w3-padding-large w3-opacity">Click any square for Pokemon! v1.0</a>
-            <!--
-            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">Merchandise</a>
-                    <a href="#" class="w3-bar-item w3-button">Extras</a>
-                    <a href="#" class="w3-bar-item w3-button">Media</a>
+                        <button onclick="update(data1)">Variable 1</button>
+        <button onclick="update(data2)">Variable 2</button>
 
-                            <button onclick="update(data1)">Variable 1</button>
-            <button onclick="update(data2)">Variable 2</button>
-
-                </div>
             </div>
-                 -->
         </div>
-
+             -->
+    </div>
         <body>
             <!-- Load d3.js -->
             <script src="d3/d3.min.js"></script>
@@ -200,12 +199,15 @@
                 var width_min = 800
 
                 //fit graph to screen 
-                //screen.width for device screen size
-                //window.innerWidth for window size
-                if(screen.width < width_min){
-                    document.body.style.zoom = window.innerWidth/width_min
+                //if(window.innerWidth < width_min){ //for window size
+                if(screen.width < width_min){ //for device screen size
+                    document.body.style.zoom = screen.width/width_min
+                    //var scale = 'scale('+ window.innerWidth/width_min + ')';
+                    //document.body.style.webkitTransform =  scale;    // Chrome, Opera, Safari
+                    // document.body.style.msTransform =   scale;       // IE 9
+                    // document.body.style.transform = scale;     // General
                 }
-
+                
                 //Data dictionary for type icons
                 var icons_type = function (type, slash) {
                     return "icons_type" + slash + "GO_" + type + ".png";
