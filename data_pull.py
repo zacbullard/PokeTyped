@@ -26,8 +26,8 @@ def pull_species_data(sub_dir_species):
             pokemon = requests.get(poke_api + '/pokemon-species/'+str(i)).json()
         except ValueError:
             print("Missing species data from API! "+ variety['pokemon']['name'])
-                with open(cache_dir+"/missing_species.txt", 'a') as f:
-                        f.write(str(i)+'\n')
+            with open(cache_dir+"/missing_species.txt", 'a') as f:
+                    f.write(str(i)+'\n')
 
         pickle.dump(pokemon, open(sub_dir_species+'/'+str(i)+'.pkl', 'wb' ) )
 
