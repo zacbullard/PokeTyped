@@ -4,8 +4,7 @@
 <title>PokeTyped</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="CSS/w3.css">
 <meta name="description" content="View all Pokemon by type">
 <meta name="author" content="Dr. Zachary Bullard">
 <style>
@@ -18,16 +17,17 @@
 </style>
 
 <head>
-
+    <link rel="icon" href="icons_type/GO_Fire.png">
 </head>
 
 <body>
 
     <div class="w3-bar w3-black w3-card">
-        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
         <a href="index.html" class="w3-bar-item w3-button w3-padding-large">POKETYPED</a>
-        <a href="about.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT</a>
+        <a href="about.html" class="w3-bar-item w3-button w3-padding-large">ABOUT</a>
+        <a class="w3-bar-item w3-right w3-opacity">Click any square for Pokemon! v1.0</a>
         <!--
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
         <div class="w3-dropdown-hover w3-hide-small">
             <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -102,9 +102,9 @@
         </p>
         <p class="w3-opacity"><i>Scaling</i></p>
         <p class="w3-justify">
-            Bad scaling was a common issue I had with other heat maps trying to depict the typing distribution of pokemon when I did my initial research.
+            Uninformative scaling was a common issue I had with other heat maps trying to depict the typing distribution of pokemon when I did my initial research.
             There are so many Water and Normal pokemon, that these spikes in the data wash out the contrast with all bins outside the diagonal.
-            This also conflicts with one of the main messages and fun with this graph, which is discovering which type combinations don't exist, or only have a single rare representative.
+            This also conflicts with one of the main messages and ways to have fun with this graph, which is discovering which type combinations don't exist, or only have a single rare representative.
         </p>   
         <p class="w3-justify">         
             So, I chose a log scale for several nice properties.
@@ -113,16 +113,16 @@
                     1: log(0) is undefined, so I can paint all <b>unused</b> type combinations in stark black.
                 </li>
                 <li>
-                    2: log(1) is zero, so I can paint all type combinations of pokemon <b>unique type</b> in pure grey.
+                    2: log(1) is zero, so I can paint all <b>unique</b> type combinations in pure grey.
                 </li>
                 <li>
-                    3: log() brings down large outliers, letting you see more contrast in the lower count ranges.
+                    3: log(x) brings down large outliers, letting you see greater contrast in the lower count ranges.
                 </li>
             </ul>
         </p>
         <p class="w3-justify">  
-            The scale bar is kind of unusual due to these properties, especially the black bottom part ticked with several zeros. 
-            But I hope it's not too off-putting for people, and they catch on with the meaning in the color scheme.
+            The scale bar is slightly unusual due to these properties, especially the black bottom part ticked with several zeros. 
+            But I hope it's not too off-putting for people, and they can intuit the meaning in the color scheme.
         </p>
         <h2>Why PokeTyped?</h2>
         <p class="w3-opacity"><i>For Love</i></p>
@@ -135,7 +135,9 @@
         <p class="w3-opacity"><i>For Imagination</i></p>
         <p class="w3-justify">
             The rock-paper-scissors typing system is fun to think about, and it's also kind of like taking the classical Greek elements of air <img src="icons_type/GO_Flying.png" style="width:25px">, earth <img src="icons_type/GO_Ground.png" style="width:25px">, fire <img src="icons_type/GO_Fire.png" style="width:25px">, and water <img src="icons_type/GO_Water.png" style="width:25px">, but scaling it up to 18 elements.
-            It's pure fuel for the imagination, trying to envision what an "electric and bug" monster would look like and how it would behave.
+            It's pure fuel for the imagination. Just try to envision what an "electric and bug" monster would look like and how it would behave. I'll wait... Ok, so one pokemon with this typing is Joltik<img src="icons_pokemon/joltik.png" title="Joltik" style="width:50px">who is a little fuzzy guy who hops into the fur of another creature to steal their static electricity. Pretty creative, right?
+        </p>
+         <p class="w3-justify">   
             Surprisingly, despite the release of over 800+ Pokemon, many of the 171 type combinations remain barren.
         </p>
         <p class="w3-opacity"><i>For Strategy</i></p>
@@ -154,7 +156,7 @@
         </p>
         <p class="w3-justify">
             With the advent of the player vs. player combat in Pokemon GO (by many measures the most popular and played Pokemon game ever), type effectiveness knowledge is a must, as you have to know how to cover the weaknesses between your team's pokemon before you battle, and also play into your strengths on against your opponent's team dynamically.
-            The mainline pokemon games are not known for their difficulty, but it still pays dividends to have a type effectiveness reference, as the effectiveness multipliers are much stronger than in Pokemon GO (hello complete damage immunity <img src="icons_other/immune.png" style="width:25px">!).
+            The mainline Pokemon games are not known for their difficulty, but it still pays dividends to have a type effectiveness reference, as the effectiveness multipliers are much stronger than in Pokemon GO (hello complete damage immunity <img src="icons_other/immune.png" style="width:25px">!).
         </p>
         <p class="w3-justify">
             For PokeTyped, I only list the resistances and super effectiveness of incoming attacks against the Pokemon of the given type, and don't bother with which types the Pokemon can potentially do super effective damage against.
@@ -164,7 +166,7 @@
                     1: Pokemon can learn moves outside of their own type, and super effectiveness has a greater effect than STAB (Same Type Attack Bonus)
                 </li>
                 <li>
-                    2: With 171 potential combinations, listing them all would just be information overload
+                    2: With 171 potential combinations, listing all outgoing attack effectivenesses would just be information overload (incoming attacks can only ever be one type, which is less information to represent)
                 </li>
                 <li>
                     3: Listing offensive effectivenesses is redundant, since it will be listed in the defensive effectiveness for the defending pokemon
@@ -177,13 +179,15 @@
 
         <p class="w3-opacity"><i>Closing Remarks</i></p>
         <p class="w3-justify">
-            As a kid, after I caught all 150 'mons in the original Pokemon Red, I felt immense satisfaction.
-            Even if your reward is just a certificate in-game (not even a real piece of paper, just a digital one!).
-            When generation II came out, I thought "Forget it, I'm not doing all that over again!"
+            As a kid after I caught all 150 'mons in the original Pokemon Red, I felt immense satisfaction.
+            Even if your reward is just a certificate in-game. Which I like to joke that "You just get a piece of paper, and it's not even real paper, just digital!"
+            Then generation II came out, I thought "Forget it, I'm not doing all that over again!"
+        </p>
+        <p class="w3-justify">
             And thus my interest faded, until decades later, with the introduction of Pokemon GO.
-            My son gained interest watching me, and I picked up Pokemon Sword for us to play together, marking 23 years in between playing mainline games.
+            My son gained interest watching me, and we picked up Pokemon Sword for us to play together, marking 23 years in between playing mainline games.
             I think that stands as a testament to the innate allure that beasts of the imagination has on the human psyche, and the ability of the Pokemon franchise to capture that feeling.
-            I hope you find this website entertaining, whether it be through the fluff of imagination, or the crunch of the rules and mechanics.
+            I hope you find this website entertaining for you, whether it be through the fluff of imagination, or the crunch of the rules and mechanics.
         </p>
         <p class="w3-justify">
             ~Dr. Zachary Bullard

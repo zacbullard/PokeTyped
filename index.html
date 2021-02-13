@@ -1,15 +1,14 @@
 ﻿<!DOCTYPE html>
-<!-- Caveat: maximum number of pokemon in a given type bucket is currently hard-coded-->
+<!-- Caveat: maximum number of pokemon in a given type bucket is currently hard-coded in var max_number_pokemon-->
 <html lang="en">
 <title>PokeTyped</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="CSS/w3.css">
 <meta name="description" content="View all Pokemon by type">
 <meta name="author" content="Dr. Zachary Bullard">
 <style>
+
     body {
         font-family: "Lato", sans-serif
     }
@@ -19,7 +18,6 @@
         text-align: left;
         padding: 5px;
         font: 18px sans-serif;
-        font-family: "Lato";
         background: white;
         border: solid;
         border-width: 2;
@@ -32,7 +30,6 @@
         text-align: center;
         padding: 2px;
         font: 18px sans-serif;
-        font-family: "Lato";
         background: lightsteelblue;
         border: 2px solid black;
         border-radius: 40px;
@@ -41,59 +38,54 @@
 
     th {
         text-align: center;
+        font: 14px sans-serif;
         font-weight: bold;
-        font-family: "Lato";
     }
 
     td {
         text-align: right;
         font-weight: font-weight;
-        font-family: "Lato";
         padding-right: 35px;
+        font: 15px sans-serif;
     }
 
     table {
         position: absolute;
-        text-align: left;
-        //width: 400px;
-        //height: 28px;
-        //width: 100%;
-        //min-width: 400px;
+        margin-left: 10px;
         padding: 2px;
         font: 18px sans-serif;
-        font-family: "Lato";
         background: white;
         border: 2px solid black;
         border-radius: 40px;
         pointer-events: all;
     }
 
+    .eff_icons {
+        height: 125px;
+        width: 125px;
+    }
+
     .chart_labels {
-        font-family: "Lato";
         font: 15px sans-serif;
     }
 
     .legend_labels {
-        font-family: "Lato";
         font: 20px sans-serif;
     }
 
     .line__figure {
-        float: left;
-        font-family: "Lato";
+        float: left;        
         margin-right: -20px;
         margin-top: 0px;
         margin-bottom: 0px;
     }
 
     .line__figcaption {
-        font-family: "Lato";
         position: relative;
         top: -15px;
     }
 
     .line__figure_type {
-        font-family: "Lato";
         float: left;
         // margin-left: -5px;
         margin-right: -10px;
@@ -103,7 +95,6 @@
     }
 
     .line__figcaption_type {
-        font-family: "Lato";
         position: relative;
         top: 10px;
     }
@@ -111,17 +102,17 @@
 </style>
 
 <head>
-
+    <link rel="icon" href="icons_type/GO_Fire.png">
 </head>
 
 <body>
 
-
         <div class="w3-bar w3-black w3-card">
-            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <a href="index.html" class="w3-bar-item w3-button w3-padding-large">POKETYPED</a>
-            <a href="about.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT</a>
+            <a href="about.html" class="w3-bar-item w3-button w3-padding-large">ABOUT</a>
+            <a class="w3-bar-item w3-right w3-opacity">Click any square for Pokemon! v1.0</a>
             <!--
+            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -139,7 +130,6 @@
 
         <body>
             <!-- Load d3.js -->
-            <!--<script src="https://d3js.org/d3.v4.min.js"></script> -->
             <script src="d3/d3.min.js"></script>
 
             <!-- Create a div where the graph will take place -->
@@ -150,12 +140,12 @@
                     <th id="effectiveness_header" colspan="6">Effectiveness and Damage Multipliers of Attacks Against Pokemon</th>
                 </tr>
                 <tr>
-                    <th><image src="icons_other/immune.png" height=150 width=150></image></th>
-                    <th><image src="icons_other/resistantx2.png" height=150 width=150></image></th>
-                    <th><image src="icons_other/resistant.png" height=150 width=150></image></th>
-                    <th><image src="icons_other/effective.png" height=150 width=150></image></th>
-                    <th><image src="icons_other/super_effective.png" height=150 width=150></image></th>
-                    <th><image src="icons_other/super_effectivex2.png" height=150 width=150></image></th>
+                    <th><image src="icons_other/immune.png" class="eff_icons"></image></th>
+                    <th><image src="icons_other/resistantx2.png" class="eff_icons"></image></th>
+                    <th><image src="icons_other/resistant.png" class="eff_icons"></image></th>
+                    <th><image src="icons_other/effective.png" class="eff_icons"></image></th>
+                    <th><image src="icons_other/super_effective.png" class="eff_icons"></image></th>
+                    <th><image src="icons_other/super_effectivex2.png" class="eff_icons"></image></th>
                 </tr>
                 <tr>
                     <th>Immune</th>
@@ -180,6 +170,42 @@
 
                 var max_number_pokemon = 75
 
+
+                // set the dimensions and margins of the graph
+                var 
+                width = 600,
+                height = 600,
+                margin = {
+                    top: 100, 
+                    right: 100, 
+                    bottom: 10, 
+                    left: 100
+                        },
+                icon_side = 30,
+                icon_buffer = 3;
+
+                 //LEGEND dimensions
+                var 
+                num_rectangles_domain1 = 39,
+                num_rectangles_domain2 = 80,
+                height_rectangles = 5,
+                width_rectangles = 50
+                x_legend = (width + width_rectangles*0.25),
+                y_ticks = 401 ;
+
+                //Effectiveness table information
+                var eff_icon_width = 150
+
+                //Desired minimum width of total image
+                var width_min = 800
+
+                //fit graph to screen 
+                //screen.width for device screen size
+                //window.innerWidth for window size
+                if(screen.width < width_min){
+                    document.body.style.zoom = window.innerWidth/width_min
+                }
+
                 //Data dictionary for type icons
                 var icons_type = function (type, slash) {
                     return "icons_type" + slash + "GO_" + type + ".png";
@@ -194,15 +220,6 @@
                     .interpolator(d3.scaleLog().domain([0, 1, max_number_pokemon]).range([scale_color1, scale_color2, scale_color3]))
                     .domain([0, 1, max_number_pokemon])
 
-                // set the dimensions and margins of the graph
-                var margin = {
-                    top: 100, right: 600, bottom: 20, left: 100
-                },
-                    width = 1300 - margin.left - margin.right,
-                    height = 720 - margin.top - margin.bottom,
-                    icon_side = 30,
-                    icon_buffer = 3;
-
                 // append the svg object to the body of the page
                 var svg = d3.select("#poke_graph")
                     .append("svg")
@@ -215,9 +232,13 @@
                 var table = d3.select("#effectiveness_table")
                     , tbody = table.append("tbody")
 
+                //Move effectivness table if need
+                if(screen.width > width_min*2){
+                    table.style("top","100px")
+                    table.style("left",width_min+"px")
+                }
+
                 //Read the data
-                //d3.csv("https://raw.githubusercontent.com/zacbullard/PokeTyped/main/type_stacked.csv").then(function(data) { //v6 way
-                //d3.csv("https://raw.githubusercontent.com/zacbullard/PokeTyped/main/type_stacked.csv", function (error,data) {
                 var data = d3.csv("type_stacked.csv", function (error, data) {
                     // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
                     var type1_stacked = d3.map(data, function (d) { return d['Type 1']; }).keys()
@@ -231,7 +252,6 @@
 
                     svg.append("g")
                         .attr('id', 'heat-map')
-                        //.style("font-size", 15)
                         .attr("transform", "translate(0, " + 0 + ")")
                         .call(d3.axisBottom(xAxis).tickSize(0))
                         .selectAll(".tick").each(function (d, i) {
@@ -256,7 +276,6 @@
                         .padding(0.05);
 
                     svg.append("g")
-                        //.style("font-size", 15)
                         .call(d3.axisLeft(yAxis).tickSize(0))
                         .selectAll(".tick").each(function (d, i) {
                             d3.select(this)
@@ -302,11 +321,11 @@
                         //Choose text and location of tooltip_hover
                         tooltip_hover.html(function () {
                             if (d['Type 1'] == d['Type 2']) {
-                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" width="' + icon_side + '" height="' + icon_side + '"></image>'
                                     + " Pokemon type count: <br> " + d.Count;
                             } else {
-                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
-                                    + ' and ' + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
+                                return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon"  width="' + icon_side + '" height="' + icon_side + '"></image>'
+                                    + ' and ' + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon"  width="' + icon_side + '" height="' + icon_side + '"></image>'
                                     + " Pokemon type count: <br> " + d.Count;
                             }
                         })
@@ -342,15 +361,14 @@
                                 //.style("opacity", 0)
                                 .remove()
 
-
                             d3.select("#effectiveness_header").style("opacity", 0)
                             //Update header with type info
                             d3.select("#effectiveness_header").html(function () {
                                 if (d['Type 1'] == d['Type 2']) {
-                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of type: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>';
+                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of type: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" width="' + icon_side + '" height="' + icon_side  + '"></image>';
                                 } else {
-                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of types: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>'
-                                        + " and " + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon"  width="' + icon_side / 2 + '" height="' + icon_side / 2 + '"></image>';
+                                    return "Effectiveness and Damage Multipliers of Attacks Against Pokemon of types: " + d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '"' + icon_side + '" height="' + icon_side + '"></image>'
+                                        + " and " + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" width="' + icon_side + '" height="' + icon_side + '"></image>';
                                 }
                             })
                             d3.select("#effectiveness_header")
@@ -409,11 +427,8 @@
                                 var pokemon_list = ''
                                 tooltip_bottom.html(function () {
                                     if (d['Type 1'] == d['Type 2']) {
-                                        //pokemon_list = d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" align="left" id="type_icon" ></image>:'
                                         pokemon_list = '<figure class="line__figure_type"><img src="' + icons_type(d['Type 1'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 1'] + ' </b></figcaption></figure>'
                                     } else {
-                                        //pokemon_list = ' <image class="line__type" src="' + icons_type(d['Type 1'], '\\') + '" align="left" id="type_icon" ></image>'
-                                        //  + ' <image class="line__figure" src="' + icons_type(d['Type 2'], '\\') + '" align="left" id="type_icon" ></image>'
                                         pokemon_list = '<figure class="line__figure_type"><img src="' + icons_type(d['Type 1'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 1'] + ' </b></figcaption></figure>'
                                             + '<figure class="line__figure_type"><img src="' + icons_type(d['Type 2'], '\\') + '" id="type_fig" /><figcaption class="line__figcaption_type"><b> ' + d['Type 2'] + ' </b></figcaption></figure>'
                                     }
@@ -432,7 +447,7 @@
                                 tooltip_bottom
                                     //.transition().duration(200)
                                     .style("opacity", 1)
-                                tooltip_bottom.style("font-size", "34px")
+                                tooltip_bottom.style("font-size", "32px")
                                 tooltip_bottom.html(function () {
                                     return d['Type 1'] + ' <image src="' + icons_type(d['Type 1'], '\\') + '" id="type_icon" ></image>'
                                         + " and " + d['Type 2'] + ' <image src="' + icons_type(d['Type 2'], '\\') + '" id="type_icon" ></image> Pokemon don\'t exist!';
@@ -485,14 +500,9 @@
                         .on("click", mouseclick)
                 })
 
-                //LEGEND
-                g = svg.append("g")
-                    .attr("transform", "translate(" + (width + margin.left - icon_side) + "," + (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) + ")")
-                    .style("font", "14px Lato")
-                var num_rectangles_domain1 = 39
-                var num_rectangles_domain2 = 80
-                var width_rectangles = 5
-                var height_rectangles = 50
+                //LEGEND SQUARES
+                g_legend = svg.append("g")
+                    .attr("transform", "translate(" + x_legend + "," + 0 + ")")
                 //Fancy shmancy way to convert any real number between x0 and x1 to any logged number between y0 and y1 while keeping log scaling betwix
                 var x0 = 0
                 var x1 = 1
@@ -502,11 +512,11 @@
                     return Math.exp((x - x0) / (x1 - x0) * (Math.log(y1) - Math.log(y0)) + Math.log(y0))
                 }
                 //Border
-                g.append("rect")
-                    .attr("y", function (d) { return 0 - (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) })
-                    .attr("x", function (d) { return -height_rectangles })
-                    .attr("width", function (d) { return height_rectangles })
-                    .attr("height", function (d) { return width_rectangles * (num_rectangles_domain1 + num_rectangles_domain2) })
+                g_legend.append("rect")
+                    .attr("x", function (d) { return 0 })
+                    .attr("y", function (d) { return 0 })
+                    .attr("width", function (d) { return width_rectangles })
+                    .attr("height", function (d) { return height_rectangles * (num_rectangles_domain1 + num_rectangles_domain2) })
                     .style("stroke", "grey")
                     .style("fill", "none")
                     .style("stroke-width", "8px")
@@ -516,16 +526,29 @@
                 var rect_data1 = d3.range(num_rectangles_domain1 + 1).map(function (d) { return [num_rectangles_domain1 + num_rectangles_domain2 - d, d / num_rectangles_domain1] })
                 var rect_data2 = d3.range(1, num_rectangles_domain2 + 1).map(function (d) { return [num_rectangles_domain2 - d, convert_to_log(d / num_rectangles_domain2, x0, x1, y0, y1)] })
                 var rect_data = rect_data1.concat(rect_data2)
-                g.selectAll("rect").data(rect_data).enter()
+                g_legend.selectAll("rect").data(rect_data).enter()
                     .append("rect")
-                    .attr("y", function (d) { return d[0] * width_rectangles - (margin.top * 3.5 + icon_side * 2 - icon_buffer * 3) })
-                    .attr("x", function (d) { return -height_rectangles })
-                    .attr("width", function (d) { return height_rectangles })
-                    .attr("height", function (d) { return width_rectangles })
+                    .attr("x", function (d) { return 0 })
+                    .attr("y", function (d) { return d[0] * height_rectangles })
+                    .attr("width", function (d) { return width_rectangles })
+                    .attr("height", function (d) { return height_rectangles+1}) //One pixel buffer here so that there is no gap between rectangles
                     .attr("fill", function (d) {
                         return (myColor(d[1]))
                     })
-                //Make ticks
+                //Make Axis label
+                g_legend.append("text")
+                    .attr("fill", "black")
+                    .attr("x", 0)
+                    .attr("y", -14)
+                    .attr("dy", ".3em")
+                    .text("Count")
+                    .classed("legend_labels", true);
+
+                //LEGEND TICKS
+                //Make ticks. Has to be made seperately from heat map as the axis is ALWAYS at the origin in d3.js
+                g_ticks = svg.append("g")
+                .attr("transform", "translate(" + x_legend + "," + 0 + ")")
+                .style("font", "14px Lato")
                 var domain = [0.1, 1, 75]
                 var range = [0, 200].reverse()
                 var logScale = d3.scaleLog().domain(domain).range(range)
@@ -535,15 +558,9 @@
                     }
                     return e;
                 }).tickSize(15);
-                g.call(axis)
-                //Make Axis label
-                g.append("text")
-                    .attr("fill", "black")
-                    .attr("x", -height_rectangles * 1.1)
-                    .attr("y", -(margin.top * 3.5 + icon_side * 2 + icon_buffer * 2))
-                    .attr("dy", ".3em")
-                    .text("Count")
-                    .classed("legend_labels", true);
+                g_ticks.attr("transform", "translate("+ (x_legend + width_rectangles) +
+                    ","+ y_ticks +")")
+                .call(axis)
 
             </script>
 
