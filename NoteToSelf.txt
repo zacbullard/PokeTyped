@@ -1,0 +1,18 @@
+To run chromium locally to test html, start it in cmd with:
+
+.\chrome.exe --allow-file-access-from-files
+
+To do:
+
+Make w3 validator happy
+https://validator.w3.org/
+
+Add buttons to change effectiveness to Pokemon Go Standards, remove gmax+mega+etc. evolutions
+https://www.d3-graph-gallery.com/graph/barplot_button_data_simple.html
+
+Make heatmap sortable by columns by greatest to least count.
+https://bl.ocks.org/boeric/e16ad218bc241dfd2d6e
+
+Add another column and row for column and row totals, and all pokemon that have *at least* one of that type
+
+Figure out "wait for transition to finish" to get smoother table transitions
