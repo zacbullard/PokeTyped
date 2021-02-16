@@ -16,3 +16,5 @@ https://bl.ocks.org/boeric/e16ad218bc241dfd2d6e
 Add another column and row for column and row totals, and all pokemon that have *at least* one of that type
 
 Figure out "wait for transition to finish" to get smoother table transitions
+
+Add option to change color scale colors
